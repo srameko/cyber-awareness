@@ -22,6 +22,36 @@
             --gradient-1: linear-gradient(135deg, #00d4aa 0%, #00a896 100%);
             --gradient-2: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             --gradient-glow: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.15) 0%, transparent 70%);
+            --bg-header: rgba(10, 14, 23, 0.95);
+            --grid-line-color: rgba(0, 212, 170, 0.03);
+        }
+
+        [data-theme="light"] {
+            --bg-dark: #f0f4f8;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --bg-header: rgba(240, 244, 248, 0.95);
+            --grid-line-color: rgba(0, 212, 170, 0.05);
+            --gradient-glow: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.08) 0%, transparent 70%);
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root:not([data-theme]) {
+                --bg-dark: #f0f4f8;
+                --bg-card: #ffffff;
+                --bg-card-hover: #f1f5f9;
+                --text-primary: #0f172a;
+                --text-secondary: #334155;
+                --text-muted: #64748b;
+                --border-color: #e2e8f0;
+                --bg-header: rgba(240, 244, 248, 0.95);
+                --grid-line-color: rgba(0, 212, 170, 0.05);
+                --gradient-glow: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.08) 0%, transparent 70%);
+            }
         }
 
         * {
@@ -46,9 +76,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
-                linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
+            background-image:
+                linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
             background-size: 50px 50px;
             pointer-events: none;
             z-index: 0;
@@ -79,7 +109,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(10, 14, 23, 0.95);
+            background: var(--bg-header);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
             z-index: 1000;
@@ -1539,11 +1569,54 @@
             color: var(--text-secondary);
         }
 
+        /* Header Controls (lang + theme) */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .lang-switcher,
+        .theme-toggle {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .toggle-btn {
+            padding: 0.35rem 0.65rem;
+            font-size: 0.8rem;
+            font-family: 'Space Mono', monospace;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn:hover {
+            color: var(--text-primary);
+            background: rgba(0, 212, 170, 0.1);
+        }
+
+        .toggle-btn.active {
+            background: var(--accent-primary);
+            color: #0a0e17;
+            font-weight: 600;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.75rem;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: center;
             }
 
             .progress-container {
@@ -1606,6 +1679,18 @@
                 </div>
                 <span class="progress-text" id="progressText">0%</span>
             </div>
+            <div class="header-controls">
+                <div class="lang-switcher">
+                    <button class="toggle-btn" onclick="setLanguage('en')">EN</button>
+                    <button class="toggle-btn" onclick="setLanguage('cs')">CS</button>
+                    <button class="toggle-btn" onclick="setLanguage('sk')">SK</button>
+                </div>
+                <div class="theme-toggle">
+                    <button class="toggle-btn" data-theme-btn="system" onclick="setTheme('system')" data-i18n="ui.system">System</button>
+                    <button class="toggle-btn" data-theme-btn="dark" onclick="setTheme('dark')" data-i18n="ui.dark">Dark</button>
+                    <button class="toggle-btn" data-theme-btn="light" onclick="setTheme('light')" data-i18n="ui.light">Light</button>
+                </div>
+            </div>
             <div class="timer">
                 <span>⏱️</span>
                 <span id="timerDisplay">25:00</span>
@@ -1619,11 +1704,11 @@
             <div class="welcome-screen">
                 <div class="welcome-badge">
                     <span>📚</span>
-                    <span>Required Training • 2025</span>
+                    <span data-i18n="welcome.badge">Required Training • 2025</span>
                 </div>
-                <h1 class="welcome-title">Cyber Security Awareness</h1>
-                <p class="welcome-subtitle">
-                    Learn how to protect yourself, your colleagues, and our organisation from cyber threats. 
+                <h1 class="welcome-title" data-i18n="welcome.title">Cyber Security Awareness</h1>
+                <p class="welcome-subtitle" data-i18n="welcome.subtitle">
+                    Learn how to protect yourself, your colleagues, and our organisation from cyber threats.
                     This training covers essential security practices everyone needs to know.
                 </p>
                 
@@ -1631,17 +1716,17 @@
                     <div class="info-card">
                         <div class="info-card-icon">⏱️</div>
                         <div class="info-card-value">25 min</div>
-                        <div class="info-card-label">Duration</div>
+                        <div class="info-card-label" data-i18n="welcome.duration">Duration</div>
                     </div>
                     <div class="info-card">
                         <div class="info-card-icon">📖</div>
                         <div class="info-card-value">8</div>
-                        <div class="info-card-label">Modules</div>
+                        <div class="info-card-label" data-i18n="welcome.modules">Modules</div>
                     </div>
                     <div class="info-card">
                         <div class="info-card-icon">✓</div>
                         <div class="info-card-value">Quiz</div>
-                        <div class="info-card-label">Assessment</div>
+                        <div class="info-card-label" data-i18n="welcome.assessment">Assessment</div>
                     </div>
                 </div>
 
@@ -1649,63 +1734,63 @@
                     <div class="module-preview">
                         <div class="module-preview-num">1</div>
                         <div class="module-preview-content">
-                            <h4>Why Security Matters</h4>
-                            <p>Understanding our responsibility</p>
+                            <h4 data-i18n="welcome.m1title">Why Security Matters</h4>
+                            <p data-i18n="welcome.m1desc">Understanding our responsibility</p>
                         </div>
                     </div>
                     <div class="module-preview">
                         <div class="module-preview-num">2</div>
                         <div class="module-preview-content">
-                            <h4>Understanding Threats</h4>
-                            <p>Know what we're facing</p>
+                            <h4 data-i18n="welcome.m2title">Understanding Threats</h4>
+                            <p data-i18n="welcome.m2desc">Know what we're facing</p>
                         </div>
                     </div>
                     <div class="module-preview">
                         <div class="module-preview-num">3</div>
                         <div class="module-preview-content">
-                            <h4>Social Engineering</h4>
-                            <p>Recognising manipulation</p>
+                            <h4 data-i18n="welcome.m3title">Social Engineering</h4>
+                            <p data-i18n="welcome.m3desc">Recognising manipulation</p>
                         </div>
                     </div>
                     <div class="module-preview">
                         <div class="module-preview-num">4</div>
                         <div class="module-preview-content">
-                            <h4>Password Security</h4>
-                            <p>Practical password habits</p>
+                            <h4 data-i18n="welcome.m4title">Password Security</h4>
+                            <p data-i18n="welcome.m4desc">Practical password habits</p>
                         </div>
                     </div>
                     <div class="module-preview">
                         <div class="module-preview-num">5</div>
                         <div class="module-preview-content">
-                            <h4>Multi-Factor Authentication</h4>
-                            <p>Your second line of defence</p>
+                            <h4 data-i18n="welcome.m5title">Multi-Factor Authentication</h4>
+                            <p data-i18n="welcome.m5desc">Your second line of defence</p>
                         </div>
                     </div>
                     <div class="module-preview">
                         <div class="module-preview-num">6</div>
                         <div class="module-preview-content">
-                            <h4>Data Protection</h4>
-                            <p>Handling information safely</p>
+                            <h4 data-i18n="welcome.m6title">Data Protection</h4>
+                            <p data-i18n="welcome.m6desc">Handling information safely</p>
                         </div>
                     </div>
                     <div class="module-preview">
                         <div class="module-preview-num">7</div>
                         <div class="module-preview-content">
-                            <h4>Reporting Incidents</h4>
-                            <p>When and how to report</p>
+                            <h4 data-i18n="welcome.m7title">Reporting Incidents</h4>
+                            <p data-i18n="welcome.m7desc">When and how to report</p>
                         </div>
                     </div>
                     <div class="module-preview">
                         <div class="module-preview-num">8</div>
                         <div class="module-preview-content">
-                            <h4>Getting Help</h4>
-                            <p>Support and resources</p>
+                            <h4 data-i18n="welcome.m8title">Getting Help</h4>
+                            <p data-i18n="welcome.m8desc">Support and resources</p>
                         </div>
                     </div>
                 </div>
 
                 <button class="btn btn-primary" onclick="nextSection()">
-                    <span>Start Training</span>
+                    <span data-i18n="ui.startTraining">Start Training</span>
                     <span>→</span>
                 </button>
             </div>
@@ -1714,10 +1799,10 @@
         <!-- Section 1: Why Security Matters -->
         <section class="section" id="section-1">
             <div class="section-header">
-                <div class="section-number">MODULE 01</div>
-                <h2 class="section-title">Why Security Matters</h2>
-                <p class="section-intro">
-                    Cyber security isn't just an IT problem—it's everyone's responsibility. 
+                <div class="section-number" data-i18n="m1.num">MODULE 01</div>
+                <h2 class="section-title" data-i18n="m1.title">Why Security Matters</h2>
+                <p class="section-intro" data-i18n="m1.intro">
+                    Cyber security isn't just an IT problem—it's everyone's responsibility.
                     Understanding why we protect our organisation helps us all make better decisions every day.
                 </p>
             </div>
@@ -1788,18 +1873,18 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="btn btn-secondary btn-nav" onclick="prevSection()">← Back</button>
-                <button class="btn btn-primary btn-nav" onclick="nextSection()">Continue →</button>
+                <button class="btn btn-secondary btn-nav" onclick="prevSection()" data-i18n="ui.back">← Back</button>
+                <button class="btn btn-primary btn-nav" onclick="nextSection()" data-i18n="ui.continue">Continue →</button>
             </div>
         </section>
 
         <!-- Section 2: Understanding Threats -->
         <section class="section" id="section-2">
             <div class="section-header">
-                <div class="section-number">MODULE 02</div>
-                <h2 class="section-title">Understanding The Threats</h2>
-                <p class="section-intro">
-                    Knowing what we're up against helps us recognise and respond to threats effectively. 
+                <div class="section-number" data-i18n="m2.num">MODULE 02</div>
+                <h2 class="section-title" data-i18n="m2.title">Understanding The Threats</h2>
+                <p class="section-intro" data-i18n="m2.intro">
+                    Knowing what we're up against helps us recognise and respond to threats effectively.
                     Here are the most common threats facing organisations today—and how to think about them.
                 </p>
             </div>
@@ -1891,17 +1976,17 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="btn btn-secondary btn-nav" onclick="prevSection()">← Back</button>
-                <button class="btn btn-primary btn-nav" onclick="nextSection()">Continue →</button>
+                <button class="btn btn-secondary btn-nav" onclick="prevSection()" data-i18n="ui.back">← Back</button>
+                <button class="btn btn-primary btn-nav" onclick="nextSection()" data-i18n="ui.continue">Continue →</button>
             </div>
         </section>
 
         <!-- Section 3: Social Engineering Deep Dive -->
         <section class="section" id="section-3">
             <div class="section-header">
-                <div class="section-number">MODULE 03</div>
-                <h2 class="section-title">Social Engineering: A Closer Look</h2>
-                <p class="section-intro">
+                <div class="section-number" data-i18n="m3.num">MODULE 03</div>
+                <h2 class="section-title" data-i18n="m3.title">Social Engineering: A Closer Look</h2>
+                <p class="section-intro" data-i18n="m3.intro">
                     Social engineering is the art of manipulating people into giving up confidential information or taking actions that compromise security. Let's examine real scenarios so you can recognise them.
                 </p>
             </div>
@@ -2044,18 +2129,18 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="btn btn-secondary btn-nav" onclick="prevSection()">← Back</button>
-                <button class="btn btn-primary btn-nav" onclick="nextSection()">Continue →</button>
+                <button class="btn btn-secondary btn-nav" onclick="prevSection()" data-i18n="ui.back">← Back</button>
+                <button class="btn btn-primary btn-nav" onclick="nextSection()" data-i18n="ui.continue">Continue →</button>
             </div>
         </section>
 
         <!-- Section 4: Password Security -->
         <section class="section" id="section-4">
             <div class="section-header">
-                <div class="section-number">MODULE 04</div>
-                <h2 class="section-title">Password Security</h2>
-                <p class="section-intro">
-                    Let's be honest: we all have too many passwords. The temptation to reuse them is real. 
+                <div class="section-number" data-i18n="m4.num">MODULE 04</div>
+                <h2 class="section-title" data-i18n="m4.title">Password Security</h2>
+                <p class="section-intro" data-i18n="m4.intro">
+                    Let's be honest: we all have too many passwords. The temptation to reuse them is real.
                     But password reuse is one of the biggest security risks you face. Here's how to manage passwords practically.
                 </p>
             </div>
@@ -2074,7 +2159,7 @@
                 <h4 style="margin-bottom: 1rem;">🔬 Try It: Password Strength Checker</h4>
                 <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">Type a test password to see how quickly it could be cracked. (Don't use your real password!)</p>
                 <div class="password-input-wrapper">
-                    <input type="text" class="password-input" id="passwordInput" placeholder="Type a test password..." oninput="checkPassword(this.value)">
+                    <input type="text" class="password-input" id="passwordInput" placeholder="Type a test password..." oninput="checkPassword(this.value)" data-i18n-placeholder="ui.passwordPlaceholder">
                 </div>
                 <div class="password-strength">
                     <div class="strength-bar" id="strength1"></div>
@@ -2082,9 +2167,9 @@
                     <div class="strength-bar" id="strength3"></div>
                     <div class="strength-bar" id="strength4"></div>
                 </div>
-                <div class="strength-text" id="strengthText">Enter a password to see its strength</div>
+                <div class="strength-text" id="strengthText" data-i18n="ui.enterPasswordHint">Enter a password to see its strength</div>
                 <div class="crack-time">
-                    <div class="crack-time-label">Estimated time to crack:</div>
+                    <div class="crack-time-label" data-i18n="ui.crackTimeLabel">Estimated time to crack:</div>
                     <div class="crack-time-value" id="crackTime">—</div>
                 </div>
             </div>
@@ -2168,18 +2253,18 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="btn btn-secondary btn-nav" onclick="prevSection()">← Back</button>
-                <button class="btn btn-primary btn-nav" onclick="nextSection()">Continue →</button>
+                <button class="btn btn-secondary btn-nav" onclick="prevSection()" data-i18n="ui.back">← Back</button>
+                <button class="btn btn-primary btn-nav" onclick="nextSection()" data-i18n="ui.continue">Continue →</button>
             </div>
         </section>
 
         <!-- Section 5: Multi-Factor Authentication -->
         <section class="section" id="section-5">
             <div class="section-header">
-                <div class="section-number">MODULE 05</div>
-                <h2 class="section-title">Multi-Factor Authentication (MFA)</h2>
-                <p class="section-intro">
-                    Even the best passwords can be stolen through phishing, breaches, or other attacks. 
+                <div class="section-number" data-i18n="m5.num">MODULE 05</div>
+                <h2 class="section-title" data-i18n="m5.title">Multi-Factor Authentication (MFA)</h2>
+                <p class="section-intro" data-i18n="m5.intro">
+                    Even the best passwords can be stolen through phishing, breaches, or other attacks.
                     MFA adds a second layer of protection that makes stolen passwords far less useful to attackers.
                 </p>
             </div>
@@ -2299,18 +2384,18 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="btn btn-secondary btn-nav" onclick="prevSection()">← Back</button>
-                <button class="btn btn-primary btn-nav" onclick="nextSection()">Continue →</button>
+                <button class="btn btn-secondary btn-nav" onclick="prevSection()" data-i18n="ui.back">← Back</button>
+                <button class="btn btn-primary btn-nav" onclick="nextSection()" data-i18n="ui.continue">Continue →</button>
             </div>
         </section>
 
         <!-- Section 6: Data Protection & Sharing -->
         <section class="section" id="section-6">
             <div class="section-header">
-                <div class="section-number">MODULE 06</div>
-                <h2 class="section-title">Data Protection & Sharing</h2>
-                <p class="section-intro">
-                    Being thoughtful about what data we share, with whom, and how, protects our organisation 
+                <div class="section-number" data-i18n="m6.num">MODULE 06</div>
+                <h2 class="section-title" data-i18n="m6.title">Data Protection & Sharing</h2>
+                <p class="section-intro" data-i18n="m6.intro">
+                    Being thoughtful about what data we share, with whom, and how, protects our organisation
                     and the people who trust us with their information.
                 </p>
             </div>
@@ -2431,18 +2516,18 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="btn btn-secondary btn-nav" onclick="prevSection()">← Back</button>
-                <button class="btn btn-primary btn-nav" onclick="nextSection()">Continue →</button>
+                <button class="btn btn-secondary btn-nav" onclick="prevSection()" data-i18n="ui.back">← Back</button>
+                <button class="btn btn-primary btn-nav" onclick="nextSection()" data-i18n="ui.continue">Continue →</button>
             </div>
         </section>
 
         <!-- Section 7: Reporting Incidents -->
         <section class="section" id="section-7">
             <div class="section-header">
-                <div class="section-number">MODULE 07</div>
-                <h2 class="section-title">Reporting Security Incidents</h2>
-                <p class="section-intro">
-                    Fast reporting can be the difference between a minor incident and a major breach. 
+                <div class="section-number" data-i18n="m7.num">MODULE 07</div>
+                <h2 class="section-title" data-i18n="m7.title">Reporting Security Incidents</h2>
+                <p class="section-intro" data-i18n="m7.intro">
+                    Fast reporting can be the difference between a minor incident and a major breach.
                     The security team would rather investigate ten false alarms than miss one real threat.
                 </p>
             </div>
@@ -2568,18 +2653,18 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="btn btn-secondary btn-nav" onclick="prevSection()">← Back</button>
-                <button class="btn btn-primary btn-nav" onclick="nextSection()">Continue →</button>
+                <button class="btn btn-secondary btn-nav" onclick="prevSection()" data-i18n="ui.back">← Back</button>
+                <button class="btn btn-primary btn-nav" onclick="nextSection()" data-i18n="ui.continue">Continue →</button>
             </div>
         </section>
 
         <!-- Section 8: Getting Help -->
         <section class="section" id="section-8">
             <div class="section-header">
-                <div class="section-number">MODULE 08</div>
-                <h2 class="section-title">Getting Help & Support</h2>
-                <p class="section-intro">
-                    Security can feel overwhelming, but you're not expected to handle it alone. 
+                <div class="section-number" data-i18n="m8.num">MODULE 08</div>
+                <h2 class="section-title" data-i18n="m8.title">Getting Help & Support</h2>
+                <p class="section-intro" data-i18n="m8.intro">
+                    Security can feel overwhelming, but you're not expected to handle it alone.
                     Knowing when and how to ask for help is a strength, not a weakness.
                 </p>
             </div>
@@ -2693,17 +2778,17 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="btn btn-secondary btn-nav" onclick="prevSection()">← Back</button>
-                <button class="btn btn-primary btn-nav" onclick="nextSection()">Take Quiz →</button>
+                <button class="btn btn-secondary btn-nav" onclick="prevSection()" data-i18n="ui.back">← Back</button>
+                <button class="btn btn-primary btn-nav" onclick="nextSection()" data-i18n="ui.takeQuiz">Take Quiz →</button>
             </div>
         </section>
 
         <!-- Section 9: Quiz -->
         <section class="section" id="section-9">
             <div class="section-header">
-                <div class="section-number">ASSESSMENT</div>
-                <h2 class="section-title">Knowledge Check</h2>
-                <p class="section-intro">
+                <div class="section-number" data-i18n="quiz.num">ASSESSMENT</div>
+                <h2 class="section-title" data-i18n="quiz.title">Knowledge Check</h2>
+                <p class="section-intro" data-i18n="quiz.intro">
                     Let's review what you've learned. Select the best answer for each question.
                 </p>
             </div>
@@ -2968,9 +3053,10 @@
                 <div class="quiz-feedback" id="feedback10"></div>
             </div>
 
+            <div id="quizAlert" style="display:none; margin-bottom:1rem; padding:1rem; border-radius:12px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); color:var(--accent-warning);"></div>
             <div class="nav-buttons">
-                <button class="btn btn-secondary btn-nav" onclick="prevSection()">← Back</button>
-                <button class="btn btn-primary btn-nav" onclick="submitQuiz()" id="submitQuizBtn">Submit Quiz</button>
+                <button class="btn btn-secondary btn-nav" onclick="prevSection()" data-i18n="ui.back">← Back</button>
+                <button class="btn btn-primary btn-nav" onclick="submitQuiz()" id="submitQuizBtn" data-i18n="ui.submitQuiz">Submit Quiz</button>
             </div>
         </section>
 
@@ -2978,31 +3064,31 @@
         <section class="section" id="section-10">
             <div class="completion-screen">
                 <div class="completion-icon">🎉</div>
-                <h2 class="completion-title">Training Complete!</h2>
-                <p class="completion-subtitle">
+                <h2 class="completion-title" data-i18n="result.title">Training Complete!</h2>
+                <p class="completion-subtitle" data-i18n="result.subtitle">
                     Congratulations on completing the Cyber Security Awareness Training.
                 </p>
 
                 <div class="completion-stats">
                     <div class="completion-stat">
                         <div class="completion-stat-value" id="finalScore">0/10</div>
-                        <div class="completion-stat-label">Quiz Score</div>
+                        <div class="completion-stat-label" data-i18n="result.quizScore">Quiz Score</div>
                     </div>
                     <div class="completion-stat">
                         <div class="completion-stat-value" id="finalTime">00:00</div>
-                        <div class="completion-stat-label">Time Taken</div>
+                        <div class="completion-stat-label" data-i18n="result.timeTaken">Time Taken</div>
                     </div>
                     <div class="completion-stat">
                         <div class="completion-stat-value">8/8</div>
-                        <div class="completion-stat-label">Modules Completed</div>
+                        <div class="completion-stat-label" data-i18n="result.modulesCompleted">Modules Completed</div>
                     </div>
                 </div>
 
                 <div class="certificate-card">
                     <div class="certificate-content">
                         <div class="certificate-badge">🛡️</div>
-                        <div class="certificate-title">Certificate of Completion</div>
-                        <p style="color: var(--text-secondary); margin: 0.5rem 0;">
+                        <div class="certificate-title" data-i18n="result.certTitle">Certificate of Completion</div>
+                        <p style="color: var(--text-secondary); margin: 0.5rem 0;" data-i18n="result.certSubtitle">
                             Cyber Security Awareness Training
                         </p>
                         <div class="certificate-date" id="completionDate"></div>
@@ -3056,7 +3142,7 @@
                 </div>
 
                 <button class="btn btn-primary" onclick="restartCourse()" style="margin-top: 2rem;">
-                    <span>Retake Training</span>
+                    <span data-i18n="ui.retakeTraining">Retake Training</span>
                     <span>↺</span>
                 </button>
             </div>
@@ -3064,7 +3150,322 @@
     </main>
 
     <script>
-        // Course state
+        // ─── Translations ────────────────────────────────────────────────────────
+        const translations = {
+            en: {
+                ui: {
+                    pageTitle: 'Cyber Security Awareness Training',
+                    system: 'System', dark: 'Dark', light: 'Light',
+                    back: '← Back', continue: 'Continue →',
+                    startTraining: 'Start Training', takeQuiz: 'Take Quiz →',
+                    submitQuiz: 'Submit Quiz', retakeTraining: 'Retake Training',
+                    passwordPlaceholder: 'Type a test password...',
+                    enterPasswordHint: 'Enter a password to see its strength',
+                    crackTimeLabel: 'Estimated time to crack:',
+                    strength: 'Strength: ',
+                    veryWeak: 'Very Weak', weak: 'Weak', good: 'Good', strong: 'Strong',
+                    instantToSeconds: 'Instant to Seconds',
+                    minutesToHours: 'Minutes to Hours',
+                    monthsToYears: 'Months to Years',
+                    centuries: 'Centuries+',
+                    pleaseAnswerAll: 'Please answer all questions before submitting.',
+                    correct: '✓ Correct!',
+                    incorrect: '✗ Incorrect. See the correct answer highlighted above.',
+                    locale: 'en-GB',
+                },
+                welcome: {
+                    badge: 'Required Training • 2025',
+                    title: 'Cyber Security Awareness',
+                    subtitle: 'Learn how to protect yourself, your colleagues, and our organisation from cyber threats. This training covers essential security practices everyone needs to know.',
+                    duration: 'Duration', modules: 'Modules', assessment: 'Assessment',
+                    m1title: 'Why Security Matters', m1desc: 'Understanding our responsibility',
+                    m2title: 'Understanding Threats', m2desc: "Know what we're facing",
+                    m3title: 'Social Engineering', m3desc: 'Recognising manipulation',
+                    m4title: 'Password Security', m4desc: 'Practical password habits',
+                    m5title: 'Multi-Factor Authentication', m5desc: 'Your second line of defence',
+                    m6title: 'Data Protection', m6desc: 'Handling information safely',
+                    m7title: 'Reporting Incidents', m7desc: 'When and how to report',
+                    m8title: 'Getting Help', m8desc: 'Support and resources',
+                },
+                m1: {
+                    num: 'MODULE 01', title: 'Why Security Matters',
+                    intro: "Cyber security isn't just an IT problem—it's everyone's responsibility. Understanding why we protect our organisation helps us all make better decisions every day.",
+                },
+                m2: {
+                    num: 'MODULE 02', title: 'Understanding The Threats',
+                    intro: "Knowing what we're up against helps us recognise and respond to threats effectively. Here are the most common threats facing organisations today—and how to think about them.",
+                },
+                m3: {
+                    num: 'MODULE 03', title: 'Social Engineering: A Closer Look',
+                    intro: "Social engineering is the art of manipulating people into giving up confidential information or taking actions that compromise security. Let's examine real scenarios so you can recognise them.",
+                },
+                m4: {
+                    num: 'MODULE 04', title: 'Password Security',
+                    intro: "Let's be honest: we all have too many passwords. The temptation to reuse them is real. But password reuse is one of the biggest security risks you face. Here's how to manage passwords practically.",
+                },
+                m5: {
+                    num: 'MODULE 05', title: 'Multi-Factor Authentication (MFA)',
+                    intro: 'Even the best passwords can be stolen through phishing, breaches, or other attacks. MFA adds a second layer of protection that makes stolen passwords far less useful to attackers.',
+                },
+                m6: {
+                    num: 'MODULE 06', title: 'Data Protection & Sharing',
+                    intro: 'Being thoughtful about what data we share, with whom, and how, protects our organisation and the people who trust us with their information.',
+                },
+                m7: {
+                    num: 'MODULE 07', title: 'Reporting Security Incidents',
+                    intro: 'Fast reporting can be the difference between a minor incident and a major breach. The security team would rather investigate ten false alarms than miss one real threat.',
+                },
+                m8: {
+                    num: 'MODULE 08', title: 'Getting Help & Support',
+                    intro: "Security can feel overwhelming, but you're not expected to handle it alone. Knowing when and how to ask for help is a strength, not a weakness.",
+                },
+                quiz: {
+                    num: 'ASSESSMENT', title: 'Knowledge Check',
+                    intro: "Let's review what you've learned. Select the best answer for each question.",
+                },
+                result: {
+                    title: 'Training Complete!',
+                    subtitle: 'Congratulations on completing the Cyber Security Awareness Training.',
+                    quizScore: 'Quiz Score', timeTaken: 'Time Taken', modulesCompleted: 'Modules Completed',
+                    certTitle: 'Certificate of Completion', certSubtitle: 'Cyber Security Awareness Training',
+                },
+            },
+            cs: {
+                ui: {
+                    pageTitle: 'Školení kybernetické bezpečnosti',
+                    system: 'Systém', dark: 'Tmavý', light: 'Světlý',
+                    back: '← Zpět', continue: 'Pokračovat →',
+                    startTraining: 'Zahájit školení', takeQuiz: 'Přejít na kvíz →',
+                    submitQuiz: 'Odeslat kvíz', retakeTraining: 'Opakovat školení',
+                    passwordPlaceholder: 'Napište testovací heslo...',
+                    enterPasswordHint: 'Zadejte heslo pro zobrazení jeho síly',
+                    crackTimeLabel: 'Odhadovaná doba prolomení:',
+                    strength: 'Síla: ',
+                    veryWeak: 'Velmi slabé', weak: 'Slabé', good: 'Dobré', strong: 'Silné',
+                    instantToSeconds: 'Okamžitě až sekundy',
+                    minutesToHours: 'Minuty až hodiny',
+                    monthsToYears: 'Měsíce až roky',
+                    centuries: 'Staletí+',
+                    pleaseAnswerAll: 'Před odesláním prosím odpovězte na všechny otázky.',
+                    correct: '✓ Správně!',
+                    incorrect: '✗ Nesprávně. Správnou odpověď vidíte zvýrazněnou výše.',
+                    locale: 'cs-CZ',
+                },
+                welcome: {
+                    badge: 'Povinné školení • 2025',
+                    title: 'Kybernetická bezpečnost',
+                    subtitle: 'Naučte se chránit sebe, své kolegy a naši organizaci před kybernetickými hrozbami. Toto školení pokrývá základní bezpečnostní postupy, které by měl znát každý.',
+                    duration: 'Délka', modules: 'Moduly', assessment: 'Hodnocení',
+                    m1title: 'Proč záleží na bezpečnosti', m1desc: 'Pochopení naší odpovědnosti',
+                    m2title: 'Pochopení hrozeb', m2desc: 'Víme, čemu čelíme',
+                    m3title: 'Sociální inženýrství', m3desc: 'Rozpoznávání manipulace',
+                    m4title: 'Bezpečnost hesel', m4desc: 'Praktické návyky při práci s hesly',
+                    m5title: 'Vícefaktorové ověřování', m5desc: 'Vaše druhá linie obrany',
+                    m6title: 'Ochrana dat', m6desc: 'Bezpečné zacházení s informacemi',
+                    m7title: 'Hlášení incidentů', m7desc: 'Kdy a jak hlásit',
+                    m8title: 'Získání pomoci', m8desc: 'Podpora a zdroje',
+                },
+                m1: {
+                    num: 'MODUL 01', title: 'Proč záleží na bezpečnosti',
+                    intro: 'Kybernetická bezpečnost není jen problémem IT — je odpovědností každého. Pochopení toho, proč chráníme svou organizaci, nám všem pomáhá každý den lépe rozhodovat.',
+                },
+                m2: {
+                    num: 'MODUL 02', title: 'Pochopení hrozeb',
+                    intro: 'Znalost toho, čemu čelíme, nám pomáhá hrozby účinně rozpoznávat a reagovat na ně. Zde jsou nejčastější hrozby, se kterými se dnes organizace setkávají.',
+                },
+                m3: {
+                    num: 'MODUL 03', title: 'Sociální inženýrství: Detailní pohled',
+                    intro: 'Sociální inženýrství je umění manipulace lidí k prozrazení důvěrných informací nebo k činům, které ohrožují bezpečnost. Podívejme se na konkrétní scénáře, abyste je dokázali rozpoznat.',
+                },
+                m4: {
+                    num: 'MODUL 04', title: 'Bezpečnost hesel',
+                    intro: 'Přiznejme si: všichni máme příliš mnoho hesel. Pokušení je znovu používat je reálné. Opakované používání hesel je však jedním z největších bezpečnostních rizik. Zde je návod, jak hesla prakticky spravovat.',
+                },
+                m5: {
+                    num: 'MODUL 05', title: 'Vícefaktorové ověřování (MFA)',
+                    intro: 'I ta nejlepší hesla mohou být odcizena prostřednictvím phishingu, úniku dat nebo jiných útoků. MFA přidává druhou vrstvu ochrany, díky které jsou odcizená hesla pro útočníky mnohem méně užitečná.',
+                },
+                m6: {
+                    num: 'MODUL 06', title: 'Ochrana a sdílení dat',
+                    intro: 'Uvážlivý přístup k tomu, jaká data sdílíme, s kým a jak, chrání naši organizaci i lidi, kteří nám svěřili své informace.',
+                },
+                m7: {
+                    num: 'MODUL 07', title: 'Hlášení bezpečnostních incidentů',
+                    intro: 'Rychlé hlášení může být rozdílem mezi malým incidentem a vážným únikem dat. Bezpečnostní tým raději prošetří deset falešných poplachů, než aby přehlédl jednu skutečnou hrozbu.',
+                },
+                m8: {
+                    num: 'MODUL 08', title: 'Pomoc a podpora',
+                    intro: 'Bezpečnost může působit ohromujícím dojmem, ale neočekává se, že ji budete řešit sami. Vědět, kdy a jak požádat o pomoc, je silnou stránkou, nikoli slabostí.',
+                },
+                quiz: {
+                    num: 'HODNOCENÍ', title: 'Prověřte své znalosti',
+                    intro: 'Pojďme si zopakovat, co jste se naučili. Vyberte nejlepší odpověď na každou otázku.',
+                },
+                result: {
+                    title: 'Školení dokončeno!',
+                    subtitle: 'Gratulujeme k absolvování školení kybernetické bezpečnosti.',
+                    quizScore: 'Výsledek kvízu', timeTaken: 'Čas absolvování', modulesCompleted: 'Dokončené moduly',
+                    certTitle: 'Osvědčení o absolvování', certSubtitle: 'Školení kybernetické bezpečnosti',
+                },
+            },
+            sk: {
+                ui: {
+                    pageTitle: 'Školenie kybernetickej bezpečnosti',
+                    system: 'Systém', dark: 'Tmavý', light: 'Svetlý',
+                    back: '← Späť', continue: 'Pokračovať →',
+                    startTraining: 'Začať školenie', takeQuiz: 'Prejsť na kvíz →',
+                    submitQuiz: 'Odoslať kvíz', retakeTraining: 'Zopakovať školenie',
+                    passwordPlaceholder: 'Napíšte testovacie heslo...',
+                    enterPasswordHint: 'Zadajte heslo pre zobrazenie jeho sily',
+                    crackTimeLabel: 'Odhadovaný čas na prelomenie:',
+                    strength: 'Sila: ',
+                    veryWeak: 'Veľmi slabé', weak: 'Slabé', good: 'Dobré', strong: 'Silné',
+                    instantToSeconds: 'Okamžite až sekundy',
+                    minutesToHours: 'Minúty až hodiny',
+                    monthsToYears: 'Mesiace až roky',
+                    centuries: 'Storočia+',
+                    pleaseAnswerAll: 'Pred odoslaním prosím odpovedajte na všetky otázky.',
+                    correct: '✓ Správne!',
+                    incorrect: '✗ Nesprávne. Správnu odpoveď vidíte zvýraznenú vyššie.',
+                    locale: 'sk-SK',
+                },
+                welcome: {
+                    badge: 'Povinné školenie • 2025',
+                    title: 'Kybernetická bezpečnosť',
+                    subtitle: 'Naučte sa chrániť seba, svojich kolegov a našu organizáciu pred kybernetickými hrozbami. Toto školenie pokrýva základné bezpečnostné postupy, ktoré by mal poznať každý.',
+                    duration: 'Dĺžka', modules: 'Moduly', assessment: 'Hodnotenie',
+                    m1title: 'Prečo záleží na bezpečnosti', m1desc: 'Pochopenie našej zodpovednosti',
+                    m2title: 'Pochopenie hrozieb', m2desc: 'Vieme, čomu čelíme',
+                    m3title: 'Sociálne inžinierstvo', m3desc: 'Rozpoznávanie manipulácie',
+                    m4title: 'Bezpečnosť hesiel', m4desc: 'Praktické návyky pri práci s heslami',
+                    m5title: 'Viacfaktorové overenie', m5desc: 'Vaša druhá línia obrany',
+                    m6title: 'Ochrana dát', m6desc: 'Bezpečné zaobchádzanie s informáciami',
+                    m7title: 'Hlásenie incidentov', m7desc: 'Kedy a ako hlásiť',
+                    m8title: 'Získanie pomoci', m8desc: 'Podpora a zdroje',
+                },
+                m1: {
+                    num: 'MODUL 01', title: 'Prečo záleží na bezpečnosti',
+                    intro: 'Kybernetická bezpečnosť nie je len problémom IT — je zodpovednosťou každého. Pochopenie toho, prečo chránime svoju organizáciu, nám všetkým pomáha každý deň lepšie rozhodovať.',
+                },
+                m2: {
+                    num: 'MODUL 02', title: 'Pochopenie hrozieb',
+                    intro: 'Znalosť toho, čomu čelíme, nám pomáha hrozby účinne rozpoznávať a reagovať na ne. Tu sú najčastejšie hrozby, s ktorými sa dnes organizácie stretávajú.',
+                },
+                m3: {
+                    num: 'MODUL 03', title: 'Sociálne inžinierstvo: Detailný pohľad',
+                    intro: 'Sociálne inžinierstvo je umenie manipulácie ľudí k prezradeniu dôverných informácií alebo k činom, ktoré ohrozujú bezpečnosť. Pozrime sa na konkrétne scenáre, aby ste ich dokázali rozpoznať.',
+                },
+                m4: {
+                    num: 'MODUL 04', title: 'Bezpečnosť hesiel',
+                    intro: 'Priznaime si: všetci máme príliš veľa hesiel. Pokušenie ich znovu používať je reálne. Opakované používanie hesiel je však jedným z najväčších bezpečnostných rizík. Tu je návod, ako heslá prakticky spravovať.',
+                },
+                m5: {
+                    num: 'MODUL 05', title: 'Viacfaktorové overenie (MFA)',
+                    intro: 'Aj tie najlepšie heslá môžu byť odcudzené prostredníctvom phishingu, úniku dát alebo iných útokov. MFA pridáva druhú vrstvu ochrany, vďaka ktorej sú odcudzené heslá pre útočníkov oveľa menej užitočné.',
+                },
+                m6: {
+                    num: 'MODUL 06', title: 'Ochrana a zdieľanie dát',
+                    intro: 'Uvážlivý prístup k tomu, aké dáta zdieľame, s kým a ako, chráni našu organizáciu aj ľudí, ktorí nám zverili svoje informácie.',
+                },
+                m7: {
+                    num: 'MODUL 07', title: 'Hlásenie bezpečnostných incidentov',
+                    intro: 'Rýchle hlásenie môže byť rozdielom medzi malým incidentom a vážnym únikom dát. Bezpečnostný tím radšej prešetrí desať falošných poplachov, než aby prehliadol jednu skutočnú hrozbu.',
+                },
+                m8: {
+                    num: 'MODUL 08', title: 'Pomoc a podpora',
+                    intro: 'Bezpečnosť môže pôsobiť ohromujúcim dojmom, ale neočakáva sa, že ju budete riešiť sami. Vedieť, kedy a ako požiadať o pomoc, je silnou stránkou, nie slabosťou.',
+                },
+                quiz: {
+                    num: 'HODNOTENIE', title: 'Preskúšajte si svoje znalosti',
+                    intro: 'Poďme si zopakovať, čo ste sa naučili. Vyberte najlepšiu odpoveď na každú otázku.',
+                },
+                result: {
+                    title: 'Školenie dokončené!',
+                    subtitle: 'Gratulujeme k absolvovaniu školenia kybernetickej bezpečnosti.',
+                    quizScore: 'Výsledok kvízu', timeTaken: 'Čas absolvovania', modulesCompleted: 'Dokončené moduly',
+                    certTitle: 'Osvedčenie o absolvovaní', certSubtitle: 'Školenie kybernetickej bezpečnosti',
+                },
+            },
+        };
+
+        // ─── i18n helpers ─────────────────────────────────────────────────────────
+        function t(key) {
+            const lang = localStorage.getItem('lang') || 'en';
+            const keys = key.split('.');
+            let obj = translations[lang] || translations['en'];
+            for (const k of keys) {
+                obj = obj && typeof obj === 'object' ? obj[k] : undefined;
+            }
+            if (obj === undefined) {
+                // fallback to English
+                obj = translations['en'];
+                for (const k of keys) obj = obj && typeof obj === 'object' ? obj[k] : undefined;
+            }
+            return obj !== undefined ? obj : key;
+        }
+
+        function applyTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const val = t(el.getAttribute('data-i18n'));
+                if (val) el.textContent = val;
+            });
+            document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                const val = t(el.getAttribute('data-i18n-html'));
+                if (val) el.innerHTML = val;
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const val = t(el.getAttribute('data-i18n-placeholder'));
+                if (val) el.placeholder = val;
+            });
+        }
+
+        function setLanguage(lang) {
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.querySelectorAll('.lang-switcher .toggle-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+            });
+            applyTranslations();
+        }
+
+        function initLang() {
+            const lang = localStorage.getItem('lang') || 'en';
+            document.documentElement.lang = lang;
+            document.querySelectorAll('.lang-switcher .toggle-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+            });
+            applyTranslations();
+        }
+
+        // ─── Theme helpers ─────────────────────────────────────────────────────────
+        function setTheme(theme) {
+            if (theme === 'system' || theme === '') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.removeItem('theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            }
+            updateThemeBtns(theme || 'system');
+        }
+
+        function updateThemeBtns(active) {
+            document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === active);
+            });
+        }
+
+        function initTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+                updateThemeBtns(saved);
+            } else {
+                updateThemeBtns('system');
+            }
+        }
+
+        // ─── Course state ─────────────────────────────────────────────────────────
         let currentSection = 0;
         const totalSections = 11;
         let timerInterval;
@@ -3085,6 +3486,8 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            initTheme();
+            initLang();
             updateProgress();
         });
 
@@ -3153,7 +3556,7 @@
             });
 
             if (!password) {
-                strengthText.textContent = 'Enter a password to see its strength';
+                strengthText.textContent = t('ui.enterPasswordHint');
                 crackTime.textContent = '—';
                 return;
             }
@@ -3186,27 +3589,27 @@
 
             if (level <= 1) {
                 strengthClass = 'weak';
-                strengthLabel = 'Very Weak';
-                time = 'Instant to Seconds';
+                strengthLabel = t('ui.veryWeak');
+                time = t('ui.instantToSeconds');
             } else if (level === 2) {
                 strengthClass = 'weak';
-                strengthLabel = 'Weak';
-                time = 'Minutes to Hours';
+                strengthLabel = t('ui.weak');
+                time = t('ui.minutesToHours');
             } else if (level === 3) {
                 strengthClass = 'medium';
-                strengthLabel = 'Good';
-                time = 'Months to Years';
+                strengthLabel = t('ui.good');
+                time = t('ui.monthsToYears');
             } else {
                 strengthClass = 'strong';
-                strengthLabel = 'Strong';
-                time = 'Centuries+';
+                strengthLabel = t('ui.strong');
+                time = t('ui.centuries');
             }
 
             for (let i = 0; i < level; i++) {
                 bars[i].classList.add('active', strengthClass);
             }
 
-            strengthText.textContent = `Strength: ${strengthLabel}`;
+            strengthText.textContent = t('ui.strength') + strengthLabel;
             crackTime.textContent = time;
         }
 
@@ -3228,9 +3631,12 @@
             
             // Check if all questions answered
             if (Object.keys(quizAnswers).length < totalQuestions) {
-                alert('Please answer all questions before submitting.');
+                const alertEl = document.getElementById('quizAlert');
+                alertEl.textContent = t('ui.pleaseAnswerAll');
+                alertEl.style.display = 'block';
                 return;
             }
+            document.getElementById('quizAlert').style.display = 'none';
 
             let score = 0;
 
@@ -3254,10 +3660,10 @@
 
                 if (quizAnswers[i] === correctAnswers[i]) {
                     score++;
-                    feedback.textContent = '✓ Correct!';
+                    feedback.textContent = t('ui.correct');
                     feedback.className = 'quiz-feedback show correct';
                 } else {
-                    feedback.textContent = '✗ Incorrect. See the correct answer highlighted above.';
+                    feedback.textContent = t('ui.incorrect');
                     feedback.className = 'quiz-feedback show incorrect';
                 }
             }
@@ -3269,7 +3675,7 @@
                 // Set final score
                 document.getElementById('finalScore').textContent = `${score}/${totalQuestions}`;
                 document.getElementById('finalTime').textContent = stopTimer();
-                document.getElementById('completionDate').textContent = new Date().toLocaleDateString('en-GB', {
+                document.getElementById('completionDate').textContent = new Date().toLocaleDateString(t('ui.locale'), {
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric'
@@ -3308,8 +3714,9 @@
             }
             
             const submitBtn = document.getElementById('submitQuizBtn');
-            submitBtn.textContent = 'Submit Quiz';
+            submitBtn.textContent = t('ui.submitQuiz');
             submitBtn.onclick = submitQuiz;
+            document.getElementById('quizAlert').style.display = 'none';
             
             // Reset timer
             if (timerInterval) {
